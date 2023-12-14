@@ -1,2 +1,63 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Arquivos de ambiente
+.env
+
+# Arquivos de configuração do Python
+*.pyc
+*.pyo
+__pycache__/
+*.pyc
+
+# Arquivos de configuração do Django
+db.sqlite3
+*.log
+
+# Arquivos gerados pelo Django
+__init__.py
+migrations/
+*.pyc
+*.pyo
+
+# Arquivos de configuração do IDE
+.idea/
+.vscode/
+
+# Arquivos de dependências
+venv/
+__pycache__/
+
+# Arquivos de mídia e uploads
+media/
+uploads/
+
+# Arquivos de coleta de estáticas
+staticfiles/
+
+# Arquivos temporários
+*.swp
+*~
+
+# Arquivos de compilação
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# Arquivos de teste
+*.pyc
+*.pyo
+
+# Logs e arquivos temporários
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+
+# Dependências Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Arquivos do Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
