@@ -70,8 +70,8 @@ class LoginView(APIView):
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key})
         else:
-            print(f"Failed login attempt with email: {email}")
-            return Response({'error': 'Invalid credentials'})
+            print("Failed login attempt with email: {email}")
+            return Response({'error': 'Invalid credentials'}, status=403)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LogoutView(APIView):
