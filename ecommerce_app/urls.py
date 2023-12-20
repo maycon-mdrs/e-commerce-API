@@ -6,6 +6,6 @@ urlpatterns = [
     path('register/', CreateUserView.as_view()),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('produtos/', ListProductsView.as_view(), name='produto'),
-    path('produto/create/', CreateProductView.as_view(), name='create_produto'),
+    path('produtos/', ListProductsView.as_view(), name='products'),
+    path('produto/create/', CreateProductView.as_view(), name='create_product'),
 ]

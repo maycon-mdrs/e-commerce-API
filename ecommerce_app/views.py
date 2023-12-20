@@ -89,7 +89,7 @@ class ListProductsView(generics.ListAPIView):
 
     def get_queryset(self):
         # Filtra os produtos associados ao usuário autenticado
-        return Product.objects.filter(usuario=self.request.user)
+        return Product.objects.filter(user=self.request.user)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
