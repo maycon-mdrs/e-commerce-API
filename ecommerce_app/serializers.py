@@ -1,16 +1,16 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from .models import CustomUser, Produto
+from .models import CustomUser, Product
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'nome', 'numero_telefone', 'email', 'password')
+        fields = ('id', 'name', 'phone_number', 'email', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = CustomUser(
-            nome=validated_data['nome'],
+            name=validated_data['name'],
             email=validated_data['email'],
         )
         user.set_password(validated_data['password'])
@@ -28,19 +28,19 @@ class LoginSerializer(serializers.Serializer):
             return user
         raise serializers.ValidationError("Incorrect Credentials")
 
-class ProdutoSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Produto
-        fields = ('id', 'titulo', 'descricao', 'preco', 'quantidade', 'imagem', 'usuario')
-        read_only_fields = ('usuario',)  # O usuário será definido automaticamente, então não precisa ser fornecido
+        model = Product
+        fields = ('id', 'title', 'description', 'price', 'quantity', 'image', 'user')
+        read_only_fields = ('user',)  # O usuário será definido automaticamente, então não precisa ser fornecido
 
     def create(self, validated_data):
         # Associa automaticamente o usuário da requisição ao produto
-        validated_data['usuario'] = self.context['request'].user
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
 class VendasSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Produto
+        model = Product
         fields = '__all__'
         

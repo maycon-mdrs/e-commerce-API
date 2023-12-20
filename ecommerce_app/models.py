@@ -2,8 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class CustomUser(AbstractUser):
-    nome = models.CharField(max_length=255)
-    numero_telefone = models.CharField(max_length=15, blank=True, null=True)
+    name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
     email = models.EmailField(unique=True, blank=False)
 
     username = models.CharField(max_length=30, unique=False, blank=True)
@@ -14,25 +14,25 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-class Produto(models.Model):
-    titulo = models.CharField(max_length=255)
-    descricao = models.TextField()
-    preco = models.FloatField()
-    quantidade = models.IntegerField()
-    imagem = models.ImageField(upload_to='produtos', blank=True)
+class Product(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    price = models.FloatField()
+    quantity = models.IntegerField()
+    image = models.ImageField(upload_to='produtos', blank=True)
 
-    usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.titulo
+        return self.title
 
-class Vendas(models.Model):
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    quantidade = models.IntegerField()
+class Sales(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
     total = models.FloatField()
     data = models.DateTimeField(auto_now_add=True)
 
-    usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.produto.titulo
+        return self.product.title

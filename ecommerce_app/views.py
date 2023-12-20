@@ -7,8 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-from ecommerce_app.models import CustomUser, Produto
-from .serializers import CustomUserSerializer, LoginSerializer, ProdutoSerializer, VendasSerializer
+from ecommerce_app.models import CustomUser, Product, Sales
+from .serializers import CustomUserSerializer, LoginSerializer, ProductSerializer, VendasSerializer
 
 class ListUsersView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
@@ -83,22 +83,22 @@ class LogoutView(APIView):
         return Response({'message': 'Successfully logged out'})
 
 
-class ListProdutosView(generics.ListAPIView):
-    serializer_class = ProdutoSerializer
+class ListProductsView(generics.ListAPIView):
+    serializer_class = ProductSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         # Filtra os produtos associados ao usuário autenticado
-        return Produto.objects.filter(usuario=self.request.user)
+        return Product.objects.filter(usuario=self.request.user)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = ProdutoSerializer(queryset, many=True)
+        serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class CreateProdutoView(generics.CreateAPIView):
-    queryset = Produto.objects.all()
-    serializer_class = ProdutoSerializer
+class CreateProductView(generics.CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
