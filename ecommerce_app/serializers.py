@@ -16,6 +16,28 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+    
+    def update(self, instance, validated_data):
+        # Verificar se a senha atual foi fornecida para alterar a senha
+        if 'password' or 'email' in validated_data:
+            current_password = validated_data.pop('current_password', None)
+
+            if not current_password:
+                raise serializers.ValidationError({'current_password': 'A senha atual é necessária para atualizar a senha ou o email.'})
+            
+            if not instance.check_password(current_password):
+                raise serializers.ValidationError({'current_password': 'A senha atual está incorreta.'})
+
+            instance.set_password(validated_data['password'])
+
+        # Atualizar outros campos
+        for attr, value in validated_data.items():
+            if attr != 'password':
+                setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField()

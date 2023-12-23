@@ -1,8 +1,9 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
+from rest_framework.exceptions import PermissionDenied, ValidationError
 
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -68,10 +69,34 @@ class LoginView(APIView):
         if user:
             login(request, user)
             token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
+            return Response({'token': token.key, 'name': user.name})
         else:
             print("Failed login attempt with email: {email}")
             return Response({'error': 'Invalid credentials'}, status=403)
+
+class UpdateUserView(generics.RetrieveUpdateAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [permissions.IsAuthenticated,]
+
+    def get_object(self):
+        user = self.request.user
+        if not user.is_anonymous:
+            return user
+        raise PermissionDenied("Você não tem permissão para acessar este recurso.")
+
+class DeleteUserView(generics.DestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        password = request.data.get('password')
+
+        if user.check_password(password):
+            user.delete()
+            return Response({'message': 'Usuário deletado com sucesso.'}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise ValidationError({'password': 'Senha incorreta.'})
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LogoutView(APIView):
