@@ -133,3 +133,23 @@ class CreateProductView(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=201, headers=headers)
     
+class UpdateProductView(generics.RetrieveUpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        obj = super().get_object()
+
+        # Verifica se o usuário que faz a solicitação é o dono do produto
+        if obj.user != self.request.user:
+            raise PermissionDenied("Você não tem permissão para atualizar este produto.")
+
+        return obj
+
+class DeleteProductView(generics.DestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.filter(user=self.request.user)
