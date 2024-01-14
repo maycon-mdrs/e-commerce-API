@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import base64
 from django.contrib.auth import get_user_model, authenticate
 from .models import CustomUser, Product
 
@@ -56,10 +57,25 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'description', 'price', 'quantity', 'image', 'user')
         read_only_fields = ('user',)  # O usuário será definido automaticamente, então não precisa ser fornecido
 
+    def validate_image(self, value):
+        # Verificar se a string é Base64
+        try:
+            # Tenta decodificar para verificar se é Base64 válido
+            base64.b64decode(value)
+        except ValueError:
+            raise serializers.ValidationError("A imagem precisa estar no formato Base64.")
+
+        # Limitar o tamanho da string (exemplo: limitar a 10MB)
+        if len(value) > 10 * 1024 * 1024:
+            raise serializers.ValidationError("A imagem é muito grande.")
+
+        return value
+    
     def create(self, validated_data):
         # Associa automaticamente o usuário da requisição ao produto
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
+
 
 class VendasSerializer(serializers.ModelSerializer):
     class Meta:
