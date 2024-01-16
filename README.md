@@ -1,6 +1,6 @@
 # Projeto E-commerce com Django e Django REST Framework
 
-Este projeto é um sistema de e-commerce desenvolvido com Django e Django REST Framework. Ele inclui funcionalidades para gerenciamento de usuários, produtos e vendas, além de autenticação e autorização.
+Este é um `PROJETO EM ANDAMENTO` de um sistema de e-commerce desenvolvido com Django e Django REST Framework. Ele inclui funcionalidades para gerenciamento de usuários, produtos e vendas, além de autenticação e autorização.
 
 ### Tecnologias Utilizadas
 
